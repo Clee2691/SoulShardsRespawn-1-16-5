@@ -3,6 +3,7 @@
 Ever wanted to create your own mob spawners? Now you can!
 # Soul Shard Recipe
 To obtain a shard, create a structure and right-click the center with a diamond, like so:
+
 ![](./images/PoshGeneralCuckoo-max-14mb.gif)
 
 The first kill you get with a Shard binds that shard to the killed entity. Shards must be on your hotbar or in your offhand. It will only receive souls from that entity from then on. To speed up the process, you can right click a Mob Spawner that contains the bound entity to consume the spawner and increase the shard's stored souls by 200 (configurable).
