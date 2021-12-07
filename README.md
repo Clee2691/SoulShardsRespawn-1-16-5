@@ -1,7 +1,15 @@
 # Soul Shards Respawn [![](http://cf.way2muchnoise.eu/full_soul-shards-respawn_downloads.svg)](https://minecraft.curseforge.com/projects/soul-shards-respawn)
 
 Ever wanted to create your own mob spawners? Now you can!
+# Soul Shard Recipe
+To obtain a shard, create a structure and right-click the center with a diamond, like so:
+![](./images/PoshGeneralCuckoo-max-14mb.gif)
 
+The first kill you get with a Shard binds that shard to the killed entity. Shards must be on your hotbar or in your offhand. It will only receive souls from that entity from then on. To speed up the process, you can right click a Mob Spawner that contains the bound entity to consume the spawner and increase the shard's stored souls by 200 (configurable).
+
+To efficiently gain souls, you should look into getting the Vile Sword, which adds another soul per kill, or the Soul Stealer enchantment, which adds an additional soul per kill per level. The maxiumum amount of souls you can obtain per kill is 7 (1 base + 1 Vile Sword + 5 max level Soul Stealer).
+
+Once you begin progressing through the tiers, you should craft a Soul Cage. A Soul Cage will let you insert your Soul Shard and will begin spawning the bound entity indefinitely.
 ## Links
 
 * [Maven](http://tehnut.info/maven/info/tehnut/soulshardsrespawn/SoulShardsRespawn/)
