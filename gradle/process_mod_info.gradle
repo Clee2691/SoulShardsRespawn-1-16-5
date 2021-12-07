@@ -1,5 +1,5 @@
 buildscript {
-    repositories { 
+    repositories {
         jcenter()
     }
 
@@ -24,5 +24,4 @@ import groovy.json.JsonSlurper
 class Json5ToTomlFilter extends FilterReader {
     Json5ToTomlFilter(Reader input) {
         super(new StringReader(new TomlWriter().write(new JsonSlurper().parseText(Jankson.builder().build().load(input.text).toJson()))))
-    }
-}
+    

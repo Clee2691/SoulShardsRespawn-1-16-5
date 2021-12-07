@@ -17,14 +17,14 @@
       {
         "modId": "forge",
         "mandatory": false,
-        "versionRange": "[31,)",
+        "versionRange": "[36,)",
         "ordering": "NONE",
         "side": "BOTH"
       },
       {
         "modId": "minecraft",
         "mandatory": true,
-        "versionRange": "[1.15,)",
+        "versionRange": "[1.16,)",
         "ordering": "NONE",
         "side": "BOTH"
       }

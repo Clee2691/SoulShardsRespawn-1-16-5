@@ -4,6 +4,7 @@ import info.tehnut.soulshardsrespawn.core.data.Binding;
 import info.tehnut.soulshardsrespawn.core.data.Tier;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.InventoryHelper;
@@ -33,17 +34,17 @@ public class BlockSoulCage extends Block {
     public static final Property<Boolean> ACTIVE = BooleanProperty.create("active");
 
     public BlockSoulCage() {
-        super(Properties.create(Material.IRON).harvestLevel(1).harvestTool(ToolType.PICKAXE).hardnessAndResistance(3.0F).notSolid());
+        super(Properties.copy(Blocks.SPAWNER));
 
-        setDefaultState(getStateContainer().getBaseState().with(POWERED, false).with(ACTIVE, false));
+        registerDefaultState(getStateDefinition().getOwner().defaultBlockState().setValue(POWERED, false).setValue(ACTIVE, false));
     }
 
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
+    public ActionResultType use(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
         if (!player.isSteppingCarefully())
             return ActionResultType.PASS;
 
-        TileEntitySoulCage cage = (TileEntitySoulCage) world.getTileEntity(pos);
+        TileEntitySoulCage cage = (TileEntitySoulCage) world.getBlockEntity(pos);
         if (cage == null)
             return ActionResultType.PASS;
 
@@ -57,7 +58,7 @@ public class BlockSoulCage extends Block {
 
 
     @Override
-    public void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState state2, boolean someBool) {
+    public void onPlace(BlockState state, World world, BlockPos pos, BlockState state2, boolean someBool) {
         handleRedstoneChange(world, state, pos);
     }
 
@@ -68,21 +69,21 @@ public class BlockSoulCage extends Block {
 
     @Override
     public void randomTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
-        if (state.get(POWERED) && !world.isBlockPowered(pos))
-            world.setBlockState(pos, state.with(POWERED, false));
+        if (state.getValue(POWERED) && !world.hasNeighborSignal(pos))
+            world.setBlockAndUpdate(pos, state.setValue(POWERED, false));
     }
 
     @Override
-    public void onReplaced(BlockState state, World world, BlockPos pos, BlockState blockState2, boolean someBool) {
+    public void onRemove(BlockState state, World world, BlockPos pos, BlockState blockState2, boolean someBool) {
         if (this.hasTileEntity(state) && state.getBlock() != blockState2.getBlock()) {
-            TileEntitySoulCage cage = (TileEntitySoulCage) world.getTileEntity(pos);
+            TileEntitySoulCage cage = (TileEntitySoulCage) world.getBlockEntity(pos);
             if (cage != null) {
                 ItemStack stack = cage.getInventory().getStackInSlot(0);
-                InventoryHelper.dropItems(world, pos, NonNullList.from(ItemStack.EMPTY, stack));
+                InventoryHelper.dropContents(world, pos, NonNullList.of(ItemStack.EMPTY, stack));
             }
         }
 
-        super.onReplaced(state, world, pos, blockState2, someBool);
+        super.onRemove(state, world, pos, blockState2, someBool);
     }
 
     @Override
@@ -91,13 +92,13 @@ public class BlockSoulCage extends Block {
     }
 
     @Override
-    public boolean hasComparatorInputOverride(BlockState state) {
+    public boolean hasAnalogOutputSignal(BlockState state) {
         return true;
     }
 
     @Override
-    public int getComparatorInputOverride(BlockState blockState, World world, BlockPos pos) {
-        TileEntitySoulCage cage = (TileEntitySoulCage) world.getTileEntity(pos);
+    public int getAnalogOutputSignal(BlockState blockState, World world, BlockPos pos) {
+        TileEntitySoulCage cage = (TileEntitySoulCage) world.getBlockEntity(pos);
         if (cage == null)
             return 0;
 
@@ -108,13 +109,13 @@ public class BlockSoulCage extends Block {
         return (int) (((double) binding.getTier().getIndex() / ((double) Tier.INDEXED.size() - 1)) * 15D);
     }
 
-    @Override
-    public boolean causesSuffocation(BlockState state, IBlockReader reader, BlockPos pos) {
-        return false;
-    }
+//    @Override
+//    public boolean causesSuffocation(BlockState state, IBlockReader reader, BlockPos pos) {
+//        return false;
+//    }
 
     @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
         builder.add(POWERED, ACTIVE);
     }
 
@@ -130,10 +131,10 @@ public class BlockSoulCage extends Block {
     }
 
     private void handleRedstoneChange(World world, BlockState state, BlockPos pos) {
-        boolean powered = world.isBlockPowered(pos);
-        if (state.get(POWERED) && !powered)
-            world.setBlockState(pos, state.with(POWERED, false), 2);
-        else if (!state.get(POWERED) && powered)
-            world.setBlockState(pos, state.with(POWERED, true), 2);
+        boolean powered = world.hasNeighborSignal(pos);
+        if (state.getValue(POWERED) && !powered)
+            world.setBlock(pos, state.setValue(POWERED, false), 2);
+        else if (!state.getValue(POWERED) && powered)
+            world.setBlock(pos, state.setValue(POWERED, true), 2);
     }
 }

@@ -14,7 +14,7 @@ public class ItemVileSword extends SwordItem implements ISoulWeapon {
     public static final IItemTier MATERIAL_VILE = new MaterialVile();
 
     public ItemVileSword() {
-        super(MATERIAL_VILE, 3, -2.4F, new Properties().group(SoulShards.TAB_SS));
+        super(MATERIAL_VILE, 3, -2.4F, new Properties().tab(SoulShards.TAB_SS));
     }
 
     @Override
@@ -27,37 +27,37 @@ public class ItemVileSword extends SwordItem implements ISoulWeapon {
         private final LazyValue<Ingredient> ingredient;
 
         public MaterialVile() {
-            this.ingredient = new LazyValue<>(() -> Ingredient.fromItems(RegistrarSoulShards.CORRUPTED_INGOT));
+            this.ingredient = new LazyValue<>(() -> Ingredient.of(RegistrarSoulShards.CORRUPTED_INGOT));
         }
 
         @Override
-        public int getMaxUses() {
-            return ItemTier.IRON.getMaxUses();
+        public int getUses() {
+            return ItemTier.IRON.getUses();
         }
 
         @Override
-        public float getEfficiency() {
-            return ItemTier.IRON.getEfficiency();
+        public float getSpeed() {
+            return ItemTier.IRON.getSpeed();
         }
 
         @Override
-        public float getAttackDamage() {
-            return ItemTier.IRON.getAttackDamage();
+        public float getAttackDamageBonus() {
+            return ItemTier.IRON.getAttackDamageBonus();
         }
 
         @Override
-        public int getHarvestLevel() {
-            return ItemTier.IRON.getHarvestLevel();
+        public int getLevel() {
+            return ItemTier.IRON.getLevel();
         }
 
         @Override
-        public int getEnchantability() {
-            return ItemTier.IRON.getEnchantability();
+        public int getEnchantmentValue() {
+            return ItemTier.IRON.getEnchantmentValue();
         }
 
         @Override
-        public Ingredient getRepairMaterial() {
-            return ingredient.getValue();
+        public Ingredient getRepairIngredient() {
+            return ingredient.get();
         }
 
     }

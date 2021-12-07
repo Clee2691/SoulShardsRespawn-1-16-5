@@ -46,9 +46,9 @@ public class HwylaCompatibilityPlugin implements IWailaPlugin {
                 if (binding.getBoundEntity() != null) {
                     EntityType<?> entityEntry = ForgeRegistries.ENTITIES.getValue(binding.getBoundEntity());
                     if (entityEntry != null)
-                        tooltip.add(new TranslationTextComponent("tooltip.soulshards.bound", entityEntry.getName()));
+                        tooltip.add(new TranslationTextComponent("tooltip.soulshards.bound", entityEntry.getRegistryName()));
                     else
-                        tooltip.add(new TranslationTextComponent("tooltip.soulshards.bound", binding.getBoundEntity().toString()).setStyle(new Style().setColor(TextFormatting.RED)));
+                        tooltip.add(new TranslationTextComponent("tooltip.soulshards.bound", binding.getBoundEntity().toString()).setStyle(Style.EMPTY.withColor(TextFormatting.RED)));
                 }
 
                 tooltip.add(new TranslationTextComponent("tooltip.soulshards.tier", binding.getTier().getIndex()));

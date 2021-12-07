@@ -11,13 +11,13 @@ public class EnchantmentSoulStealer extends Enchantment {
     }
 
     @Override
-    public int getMinEnchantability(int level) {
+    public int getMinCost(int level) {
         return (level - 1) * 11;
     }
 
     @Override
-    public int getMaxEnchantability(int level) {
-        return this.getMinEnchantability(level) + 20;
+    public int getMaxCost(int level) {
+        return this.getMinCost(level) + 20;
     }
 
     @Override

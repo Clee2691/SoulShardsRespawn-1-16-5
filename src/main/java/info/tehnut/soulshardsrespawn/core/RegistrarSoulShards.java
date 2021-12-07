@@ -33,7 +33,7 @@ public class RegistrarSoulShards {
     public static final Item CORRUPTED_INGOT = Items.AIR;
     public static final Item VILE_DUST = Items.AIR;
 
-    public static final Enchantment SOUL_STEALER = Enchantments.INFINITY;
+    public static final Enchantment SOUL_STEALER = new EnchantmentSoulStealer();
 
     @SubscribeEvent
     public static void registerBlocks(RegistryEvent.Register<Block> event) {
@@ -45,7 +45,7 @@ public class RegistrarSoulShards {
     @SubscribeEvent
     public static void registerTileEntities(RegistryEvent.Register<TileEntityType<?>> event) {
         event.getRegistry().register(
-                TileEntityType.Builder.create(TileEntitySoulCage::new, SOUL_CAGE).build(null).setRegistryName(SoulShards.MODID, "soul_cage")
+                TileEntityType.Builder.of(TileEntitySoulCage::new, SOUL_CAGE).build(null).setRegistryName(SoulShards.MODID, "soul_cage")
         );
     }
 
@@ -54,12 +54,12 @@ public class RegistrarSoulShards {
         Tier.readTiers();
 
         event.getRegistry().registerAll(
-                new BlockItem(SOUL_CAGE, new Item.Properties().group(SoulShards.TAB_SS)).setRegistryName(SOUL_CAGE.getRegistryName()),
+                new BlockItem(SOUL_CAGE, new Item.Properties().tab(SoulShards.TAB_SS)).setRegistryName(SOUL_CAGE.getRegistryName()),
                 new ItemVileSword().setRegistryName("vile_sword"),
                 new ItemSoulShard().setRegistryName("soul_shard"),
-                new Item(new Item.Properties().group(SoulShards.TAB_SS)).setRegistryName("corrupted_essence"),
-                new Item(new Item.Properties().group(SoulShards.TAB_SS)).setRegistryName("corrupted_ingot"),
-                new Item(new Item.Properties().group(SoulShards.TAB_SS)).setRegistryName("vile_dust")
+                new Item(new Item.Properties().tab(SoulShards.TAB_SS)).setRegistryName("corrupted_essence"),
+                new Item(new Item.Properties().tab(SoulShards.TAB_SS)).setRegistryName("corrupted_ingot"),
+                new Item(new Item.Properties().tab(SoulShards.TAB_SS)).setRegistryName("vile_dust")
         );
     }
 

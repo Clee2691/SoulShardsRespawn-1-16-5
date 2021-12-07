@@ -177,7 +177,7 @@ public class ConfigSoulShards {
         private static Map<String, Boolean> getDefaults() {
             Map<String, Boolean> defaults = Maps.newHashMap();
             ForgeRegistries.ENTITIES.getValues().stream()
-                    .filter(e -> e.getClassification() != EntityClassification.MISC)
+                    .filter(e -> e.getCategory() != EntityClassification.MISC)
                     .forEach(e -> {
                         String entityId = e.getRegistryName().toString();
                         defaults.put(entityId, !DEFAULT_DISABLES.contains(entityId));

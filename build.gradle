@@ -1,27 +1,32 @@
 buildscript {
     repositories {
-        maven { url = 'https://files.minecraftforge.net/maven' }
+        maven { url = 'https://maven.minecraftforge.net' }
+		maven { url = 'https://repo.spongepowered.org/maven' }
         jcenter()
         mavenCentral()
     }
     dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
     }
 }
 plugins {
-    id "com.matthewprenger.cursegradle" version "1.4.0"
-    id "maven-publish"
+    // id "com.matthewprenger.cursegradle" version "1.4.0"
+    // id "maven-publish"
 }
 
 apply plugin: 'net.minecraftforge.gradle'
+apply plugin: 'eclipse'
+
 
 def build_number = System.getenv('BUILD_NUMBER') != null ? System.getenv('BUILD_NUMBER') : 'CUSTOM'
 version = "${mc_version}-${mod_version}-${build_number}"
 group = "mcp.mobius.waila"
 archivesBaseName = "SoulShardsRespawn-forge"
 
+java.toolchain.languageVersion = JavaLanguageVersion.of(8)
+println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
 minecraft {
-    mappings channel: "snapshot", version: "20200125-1.15.1"
+    mappings channel: "official", version: "1.16.5"
 
     runs {
         client {
@@ -51,42 +56,45 @@ minecraft {
     }
 }
 
-processResources {
-    inputs.property "version", project.version
-
-    from(sourceSets.main.resources.srcDirs) {
-        include '**/*.toml'
-
-        expand 'version': project.version
-    }
-    from(sourceSets.main.resources.srcDirs) {
-        exclude '**/*.toml'
-    }
-}
+//processResources {
+//     inputs.property "version", project.version
+//
+//     from(sourceSets.main.resources.srcDirs) {
+//
+//         include 'META-INF/mods.toml'
+//
+//         expand 'version': project.version
+//     }
+//     from(sourceSets.main.resources.srcDirs) {
+//         exclude 'META-INF/mods.toml'
+//     }
+//}
 
 repositories {
     maven { url "https://tehnut.info/maven" }
+	maven { url "https://bai.jfrog.io/artifactory/maven" }
 }
 
 dependencies {
     minecraft "net.minecraftforge:forge:${mc_version}-${forge_version}"
 
-    compileOnly fg.deobf("mcp.mobius.waila:Hwyla:${hwyla_version}:api")
-    runtimeOnly fg.deobf("mcp.mobius.waila:Hwyla:${hwyla_version}")
-}
+    // compile against the API
+    compileOnly fg.deobf("mcp.mobius.waila:wthit-api:forge-2.10.9")
 
-apply from: "gradle/process_mod_info.gradle"
+    // run against the full jar
+    runtimeOnly fg.deobf("mcp.mobius.waila:wthit:forge-2.10.9")
+}
 
 // Combine main and API source sets
 jar {
     from sourceSets.main.output
     manifest {
         attributes(["Specification-Title": project.version,
-                    "Specification-Vendor": "TehNut",
-                    "Specification-Version": "1", // We are version 1 of ourselves
+                    "Specification-Vendor": "Steeldrgn",
+                    "Specification-Version": "2", // We are version 1 of ourselves
                     "Implementation-Title": project.name,
                     "Implementation-Version": "${version}",
-                    "Implementation-Vendor" :"TehNut",
+                    "Implementation-Vendor" :"Steeldrgn",
                     "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")],)
     }
 }
@@ -110,6 +118,7 @@ tasks.withType(JavaCompile) { task ->
     task.options.encoding = 'UTF-8'
 }
 
+/*
 publishing {
     tasks.publish.dependsOn 'build'
     publications {
@@ -172,3 +181,4 @@ curseforge {
         addArtifact apiJar
     }
 }
+*/

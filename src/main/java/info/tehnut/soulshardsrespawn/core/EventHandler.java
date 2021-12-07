@@ -38,20 +38,20 @@ public class EventHandler {
         if (event.getEntityLiving() instanceof PlayerEntity)
             return;
 
-        if (!SoulShards.CONFIG.getBalance().allowFakePlayers() && event.getSource().getTrueSource() instanceof FakePlayer)
+        if (!SoulShards.CONFIG.getBalance().allowFakePlayers() && event.getSource().getDirectEntity() instanceof FakePlayer)
             return;
 
         if (!SoulShards.CONFIG.getEntityList().isEnabled(event.getEntityLiving().getType().getRegistryName()))
             return;
 
-        if (!SoulShards.CONFIG.getBalance().allowBossSpawns() && !event.getEntityLiving().isNonBoss())
+        if (!SoulShards.CONFIG.getBalance().allowBossSpawns() && !event.getEntityLiving().canChangeDimensions())
             return;
 
         if (!SoulShards.CONFIG.getBalance().countCageBornForShard() && event.getEntityLiving().getPersistentData().getBoolean("cageBorn"))
             return;
 
-        if (event.getSource().getTrueSource() instanceof PlayerEntity) {
-            PlayerEntity player = (PlayerEntity) event.getSource().getTrueSource();
+        if (event.getSource().getDirectEntity() instanceof PlayerEntity) {
+            PlayerEntity player = (PlayerEntity) event.getSource().getDirectEntity();
 
             BindingEvent.GetEntityName getEntityName = new BindingEvent.GetEntityName(event.getEntityLiving());
             MinecraftForge.EVENT_BUS.post(getEntityName);
@@ -77,10 +77,10 @@ public class EventHandler {
                 binding = (Binding) newBinding.getBinding();
             }
 
-            ItemStack mainHand = player.getHeldItem(Hand.MAIN_HAND);
+            ItemStack mainHand = player.getItemInHand(Hand.MAIN_HAND);
 
             // Base of 1 plus enchantment bonus
-            int soulsGained = 1 + EnchantmentHelper.getEnchantmentLevel(RegistrarSoulShards.SOUL_STEALER, mainHand);
+            int soulsGained = 1 + EnchantmentHelper.getItemEnchantmentLevel(RegistrarSoulShards.SOUL_STEALER, mainHand);
             if (mainHand.getItem() instanceof ISoulWeapon)
                 soulsGained += ((ISoulWeapon) mainHand.getItem()).getSoulBonus(mainHand, player, event.getEntityLiving());
 
@@ -102,8 +102,8 @@ public class EventHandler {
     @SubscribeEvent
     public static void onBlockInteract(PlayerInteractEvent.RightClickBlock event) {
         MultiblockPattern pattern = ConfigSoulShards.getMultiblock();
-        ItemStack held = event.getPlayer().getHeldItem(event.getHand());
-        if (!ItemStack.areItemsEqual(held, pattern.getCatalyst()))
+        ItemStack held = event.getPlayer().getItemInHand(event.getHand());
+        if (!ItemStack.isSame(held, pattern.getCatalyst()))
             return;
 
         BlockState state = event.getWorld().getBlockState(event.getPos());
@@ -111,10 +111,10 @@ public class EventHandler {
             return;
 
         ActionResult<Set<BlockPos>> matched = pattern.match(event.getWorld(), event.getPos());
-        if (matched.getType() != ActionResultType.SUCCESS)
+        if (matched.getResult() != ActionResultType.SUCCESS)
             return;
 
-        for (BlockPos pos : matched.getResult())
+        for (BlockPos pos : matched.getObject())
             event.getWorld().destroyBlock(pos, false);
 
         held.shrink(1);
@@ -151,11 +151,11 @@ public class EventHandler {
     @Nonnull
     public static ItemStack getFirstShard(PlayerEntity player, ResourceLocation entityId) {
         // Checks the offhand first
-        ItemStack shardItem = player.getHeldItem(Hand.OFF_HAND);
+        ItemStack shardItem = player.getItemInHand(Hand.OFF_HAND);
         // If offhand isn't a shard, loop through the hotbar
         if (shardItem.isEmpty() || !(shardItem.getItem() instanceof ItemSoulShard)) {
             for (int i = 0; i < 9; i++) {
-                shardItem = player.inventory.getStackInSlot(i);
+                shardItem = player.inventory.getItem(i);
                 if (!shardItem.isEmpty() && shardItem.getItem() instanceof ItemSoulShard) {
                     Binding binding = ((ItemSoulShard) shardItem.getItem()).getBinding(shardItem);
 

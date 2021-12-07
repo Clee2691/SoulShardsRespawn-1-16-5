@@ -28,7 +28,7 @@ public class SoulShards {
     public static final ConfigSoulShards CONFIG = JsonUtil.fromJson(TypeToken.get(ConfigSoulShards.class), new File(FMLPaths.CONFIGDIR.get().toFile(), MODID + "/" + MODID + ".json"), new ConfigSoulShards());
     public static final ItemGroup TAB_SS = new ItemGroup(MODID) {
         @Override
-        public ItemStack createIcon() {
+        public ItemStack makeIcon() {
             ItemStack shard = new ItemStack(RegistrarSoulShards.SOUL_SHARD);
             Binding binding = new Binding(null, Tier.maxKills);
             ((ItemSoulShard) RegistrarSoulShards.SOUL_SHARD).updateBinding(shard, binding);

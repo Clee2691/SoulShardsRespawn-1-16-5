@@ -5,6 +5,8 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.eventbus.api.Cancelable;
 import net.minecraftforge.eventbus.api.Event;
 
+import info.tehnut.soulshardsrespawn.api.IBinding;
+
 import javax.annotation.Nullable;
 
 public class BindingEvent extends Event {
@@ -12,9 +14,9 @@ public class BindingEvent extends Event {
     private final LivingEntity entity;
     private final IBinding binding;
 
-    public BindingEvent(LivingEntity entity, IBinding binding) {
+    public BindingEvent(LivingEntity entity, IBinding bind) {
         this.entity = entity;
-        this.binding = binding;
+        this.binding = bind;
     }
 
     public IBinding getBinding() {
