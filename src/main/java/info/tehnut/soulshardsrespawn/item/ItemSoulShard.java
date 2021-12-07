@@ -13,6 +13,7 @@ import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityType;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
+import net.minecraft.item.ItemModelsProperties;
 import net.minecraft.item.ItemStack;;
 import net.minecraft.item.ItemUseContext;
 import net.minecraft.nbt.CompoundNBT;
@@ -23,6 +24,7 @@ import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraft.world.spawner.AbstractSpawner;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
+import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -41,14 +43,20 @@ public class ItemSoulShard extends Item implements ISoulShard {
 
     public ItemSoulShard() {
         super(new Properties().tab(SoulShards.TAB_SS));
-//        ItemModelsProperties.register(RegistrarSoulShards.SOUL_SHARD.getItem(), new ResourceLocation(SoulShards.MODID, "bound"), (stack, worldIn, entityIn) -> getBinding(stack) != null ? 1.0F : 0.0F);
-//        ItemModelsProperties.register(RegistrarSoulShards.SOUL_SHARD.getItem(), new ResourceLocation(SoulShards.MODID, "tier"), (stack, world, entity) -> {
-//            Binding binding = getBinding(stack);
-//            if (binding == null)
-//                return 0F;
-//
-//            return Float.parseFloat("0." + Tier.INDEXED.indexOf(binding.getTier()));
-//        });
+
+        if (FMLEnvironment.dist.isClient()) {
+            ItemModelsProperties.register(RegistrarSoulShards.SOUL_SHARD.getItem(),
+                new ResourceLocation(SoulShards.MODID, "bound"),
+                (stack, worldIn, entityIn) -> getBinding(stack) != null ? 1.0F : 0.0F);
+            ItemModelsProperties.register(RegistrarSoulShards.SOUL_SHARD.getItem(),
+                new ResourceLocation(SoulShards.MODID, "tier"), (stack, world, entity) -> {
+                    Binding binding = getBinding(stack);
+                    if (binding == null)
+                        return 0F;
+
+                    return Float.parseFloat("0." + Tier.INDEXED.indexOf(binding.getTier()));
+                });
+        }
     }
 
     @Override
